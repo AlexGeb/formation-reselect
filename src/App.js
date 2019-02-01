@@ -1,25 +1,29 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Counter from './Counter';
+import Users from './Users';
+import UsersByTeam from './UsersByTeam';
+import store from './store';
+
+const initial = store.getState();
 
 class App extends Component {
   render() {
+    console.log('render App');
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <h1>Reselect redux state</h1>
+        <Counter />
+        <h3>Les participants : </h3>
+        <Users />
+        <h3>Les équipes : </h3>
+        <div style={{ marginLeft: 25 }}>
+          <UsersByTeam teamId={1} />
+          <UsersByTeam teamId={2} />
+        </div>
+        <div>
+          <h3>Initial state : </h3>
+          <pre>{JSON.stringify(initial, null, 2)}</pre>
+        </div>
       </div>
     );
   }
