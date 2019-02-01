@@ -4,9 +4,12 @@ import { connect } from 'react-redux';
 import { makePrimePowersSelector } from './redux/data/selectors';
 import './App.css';
 
-const mapStateToProps = (state, ownProps) => ({
-  primePowers: makePrimePowersSelector(ownProps.dataSet)(state)
-});
+const makeMapStateToProps = (state, ownProps) => {
+  const primePowersSelector = makePrimePowersSelector(ownProps.dataSet);
+  return {
+    primePowers: primePowersSelector(state)
+  };
+};
 
 const PrimePowers = props => (
   <ol>
@@ -16,7 +19,7 @@ const PrimePowers = props => (
   </ol>
 );
 
-const ConnectedComponent = connect(mapStateToProps)(PrimePowers);
+const ConnectedComponent = connect(makeMapStateToProps)(PrimePowers);
 
 class App extends Component {
   state = { datasetToggle: true };
