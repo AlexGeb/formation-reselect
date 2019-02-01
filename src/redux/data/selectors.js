@@ -1,3 +1,5 @@
+import { createSelector } from 'reselect';
+
 const calculatePrimes = data => {
   const primes = [];
   for (const candidate of data) {
@@ -16,10 +18,15 @@ const calculatePrimes = data => {
   return primes;
 };
 
-export const primePowersSelector = (state, ownProps) => {
-  const { data } = state;
-  console.time('calculatePrimes');
-  const primes = calculatePrimes(data[ownProps.dataSet]);
-  console.timeEnd('calculatePrimes');
-  return primes;
-};
+const dataSelector = state => state.data;
+
+export const makePrimePowersSelector = dataSet =>
+  createSelector(
+    dataSelector,
+    data => {
+      console.time('calculatePrimes');
+      const primes = calculatePrimes(data[dataSet]);
+      console.timeEnd('calculatePrimes');
+      return primes;
+    }
+  );

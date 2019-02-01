@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { primePowersSelector } from './redux/data/selectors';
+import { makePrimePowersSelector } from './redux/data/selectors';
 import './App.css';
 
 const mapStateToProps = (state, ownProps) => ({
-  primePowers: primePowersSelector(state, ownProps)
+  primePowers: makePrimePowersSelector(ownProps.dataSet)(state)
 });
 
 const PrimePowers = props => (
