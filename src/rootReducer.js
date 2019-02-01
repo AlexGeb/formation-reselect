@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-import { reducer as growthReducer } from './redux/growth';
+import { reducer as dataReducer } from './redux/data';
 
 export default combineReducers({
-  growth: growthReducer
+  data: dataReducer
 });
