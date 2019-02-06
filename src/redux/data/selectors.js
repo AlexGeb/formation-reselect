@@ -1,4 +1,5 @@
-import { createSelector } from 'reselect';
+import { createSelectorCreator } from 'reselect';
+import memoizer from 'fast-memoize';
 
 const calculatePrimes = data => {
   const primes = [];
@@ -19,14 +20,16 @@ const calculatePrimes = data => {
 };
 
 const dataSelector = state => state.data;
+const dataSetSelector = (_, props) => props.dataSet;
 
-export const makePrimePowersSelector = dataSet =>
-  createSelector(
-    dataSelector,
-    data => {
-      console.time('calculatePrimes');
-      const primes = calculatePrimes(data[dataSet]);
-      console.timeEnd('calculatePrimes');
-      return primes;
-    }
-  );
+const unboundedCacheSelectorCreator = createSelectorCreator(memoizer);
+
+export const primePowersSelector = unboundedCacheSelectorCreator(
+  [dataSelector, dataSetSelector],
+  (data, dataSet) => {
+    console.time('calculatePrimes');
+    const primes = calculatePrimes(data[dataSet]);
+    console.timeEnd('calculatePrimes');
+    return primes;
+  }
+);

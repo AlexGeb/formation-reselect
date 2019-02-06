@@ -6,6 +6,8 @@ const initialState = { data1, data2 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case 'CHANGE_DATASETS':
+      return { data1: state.data2, data2: state.data1 };
     default:
       return state;
   }

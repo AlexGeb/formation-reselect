@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { makePrimePowersSelector } from './redux/data/selectors';
+import { primePowersSelector } from './redux/data/selectors';
 import './App.css';
 
-const makeMapStateToProps = (state, ownProps) => {
-  const primePowersSelector = makePrimePowersSelector(ownProps.dataSet);
-  return {
-    primePowers: primePowersSelector(state)
-  };
-};
+const mapStateToProps = (state, ownProps) => ({
+  primePowers: primePowersSelector(state, ownProps)
+});
 
 const PrimePowers = props => (
   <ol>
@@ -19,7 +16,7 @@ const PrimePowers = props => (
   </ol>
 );
 
-const ConnectedComponent = connect(makeMapStateToProps)(PrimePowers);
+const ConnectedComponent = connect(mapStateToProps)(PrimePowers);
 
 class App extends Component {
   state = { datasetToggle: true };
@@ -30,11 +27,13 @@ class App extends Component {
 
   render() {
     const { datasetToggle } = this.state;
+    const { changeDatasets } = this.props;
     const dataSet = datasetToggle ? 'data1' : 'data2';
     return (
       <div className="App">
         <header className="App-header">
           <button onClick={this.toggleDataSet}>Change dataset</button>{' '}
+          <button onClick={changeDatasets}>Dispatch change dataset</button>{' '}
           <span>currently : dataset {dataSet}</span>
           <ConnectedComponent dataSet={dataSet} />
         </header>
@@ -42,5 +41,11 @@ class App extends Component {
     );
   }
 }
+const mapDispatchToProps = dispatch => ({
+  changeDatasets: () => dispatch({ type: 'CHANGE_DATASETS' })
+});
 
-export default App;
+export default connect(
+  null,
+  mapDispatchToProps
+)(App);
