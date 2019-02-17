@@ -7,13 +7,17 @@ export const User = ({ user }) => {
   return <li>{user.name}</li>;
 };
 
-const userSelector = createSelector(
-  [(state, props) => props.userId, state => state.users.byId],
-  (userId, usersById) => (console.log(userId), usersById[userId])
-);
+const makeUserSelector = () =>
+  createSelector(
+    [(state, props) => props.userId, state => state.users.byId],
+    (userId, usersById) => (console.log(userId), usersById[userId])
+  );
 
-const mapStateToProps = (state, props) => ({
-  user: userSelector(state, props)
-});
+const makeMapStateToProps = () => {
+  const userSelector = makeUserSelector();
+  return (state, props) => ({
+    user: userSelector(state, props)
+  });
+};
 
-export default connect(mapStateToProps)(User);
+export default connect(makeMapStateToProps)(User);
