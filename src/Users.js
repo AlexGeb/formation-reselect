@@ -1,5 +1,5 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useContext, useMemo } from 'react';
+import { ReactReduxContext } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import User from './User';
@@ -22,8 +22,23 @@ const userIdsSelector = createSelector(
   )
 );
 
-const mapStateToProps = state => ({
-  userIds: userIdsSelector(state)
-});
+const mapState = state => ({ userIds: userIdsSelector(state) });
 
-export default connect(mapStateToProps)(Users);
+const MappedStateToPropsComponent = ({
+  mapState,
+  render: RenderedComponent
+}) => {
+  const { storeState } = useContext(ReactReduxContext);
+  const computedProps = mapState(storeState);
+  console.log(RenderedComponent);
+  console.log(computedProps);
+
+  return () => React.memo(() => <RenderedComponent {...computedProps} />);
+};
+
+export default () => (
+  <MappedStateToPropsComponent
+    mapState={mapState}
+    render={props => <Users {...props} />}
+  />
+);
