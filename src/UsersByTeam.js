@@ -24,6 +24,7 @@ const makeTeamSelector = () =>
       state => state.users.byId
     ],
     (teamId, teamsById, usersById) => {
+      console.log('team selector', teamId);
       const team = teamsById[teamId];
       const users = Object.values(usersById).filter(
         user => user.teamId === teamId

@@ -2,22 +2,28 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
-export const Users = ({ users }) => {
+import User from './User';
+
+export const Users = ({ userIds }) => {
   console.log('render Users');
   return (
     <ul>
-      {users.map(user => (
-        <li key={user.id}>{user.name}</li>
+      {userIds.map(userId => (
+        <User key={userId} userId={userId} />
       ))}
     </ul>
   );
 };
 
-const usersSelector = createSelector(
+const userIdsSelector = createSelector(
   [state => state.users.byId],
-  usersById => Object.values(usersById)
+  usersById => (
+    console.log('userIdsSelector', usersById), Object.keys(usersById)
+  )
 );
 
-const mapStateToProps = state => ({ users: usersSelector(state) });
+const mapStateToProps = state => ({
+  userIds: userIdsSelector(state)
+});
 
 export default connect(mapStateToProps)(Users);
