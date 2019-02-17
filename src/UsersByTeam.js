@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 
 const UsersByTeam = ({ team }) => {
   console.log('render UsersByTeam');
@@ -15,12 +16,27 @@ const UsersByTeam = ({ team }) => {
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const team = state.teams.byId[ownProps.teamId];
-  const users = Object.values(state.users.byId).filter(
-    user => user.teamId === ownProps.teamId
+const makeTeamSelector = () =>
+  createSelector(
+    [
+      (state, props) => props.teamId,
+      state => state.teams.byId,
+      state => state.users.byId
+    ],
+    (teamId, teamsById, usersById) => {
+      const team = teamsById[teamId];
+      const users = Object.values(usersById).filter(
+        user => user.teamId === teamId
+      );
+      return { ...team, users };
+    }
   );
-  return { team: { ...team, users } };
+
+const makeMapStateToProps = () => {
+  const teamSelector = makeTeamSelector();
+  return (state, ownProps) => ({
+    team: teamSelector(state, ownProps)
+  });
 };
 
-export default connect(mapStateToProps)(UsersByTeam);
+export default connect(makeMapStateToProps)(UsersByTeam);
