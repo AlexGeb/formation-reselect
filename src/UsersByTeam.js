@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { createSelectorCreator } from 'reselect';
-import memoize from 'lodash/memoize';
+import { createSelector } from 'reselect';
 
 const UsersByTeam = ({ team }) => {
   console.log('render UsersByTeam');
@@ -17,25 +16,27 @@ const UsersByTeam = ({ team }) => {
   );
 };
 
-const unlimitedCacheSelectorCreator = createSelectorCreator(memoize);
+export const makeTeamSelector = () =>
+  createSelector(
+    [
+      (state, props) => props.teamId,
+      state => state.teams.byId,
+      state => state.users.byId
+    ],
+    (teamId, teamsById, usersById) => {
+      const team = teamsById[teamId];
+      const users = Object.values(usersById).filter(
+        user => user.teamId === teamId
+      );
+      return { ...team, users };
+    }
+  );
 
-const teamSelector = unlimitedCacheSelectorCreator(
-  [
-    (state, props) => props.teamId,
-    state => state.teams.byId,
-    state => state.users.byId
-  ],
-  (teamId, teamsById, usersById) => {
-    const team = teamsById[teamId];
-    const users = Object.values(usersById).filter(
-      user => user.teamId === teamId
-    );
-    return { ...team, users };
-  }
-);
+const makeMapStateToProps = () => {
+  const teamSelector = makeTeamSelector();
+  return (state, ownProps) => ({
+    team: teamSelector(state, ownProps)
+  });
+};
 
-const mapStateToProps = (state, props) => ({
-  team: teamSelector(state, props)
-});
-
-export default connect(mapStateToProps)(UsersByTeam);
+export default connect(makeMapStateToProps)(UsersByTeam);
