@@ -16,27 +16,23 @@ const UsersByTeam = ({ team }) => {
   );
 };
 
-const makeTeamSelector = () =>
-  createSelector(
-    [
-      (state, props) => props.teamId,
-      state => state.teams.byId,
-      state => state.users.byId
-    ],
-    (teamId, teamsById, usersById) => {
-      const team = teamsById[teamId];
-      const users = Object.values(usersById).filter(
-        user => user.teamId === teamId
-      );
-      return { ...team, users };
-    }
-  );
+const teamSelector = createSelector(
+  [
+    (state, props) => props.teamId,
+    state => state.teams.byId,
+    state => state.users.byId
+  ],
+  (teamId, teamsById, usersById) => {
+    const team = teamsById[teamId];
+    const users = Object.values(usersById).filter(
+      user => user.teamId === teamId
+    );
+    return { ...team, users };
+  }
+);
 
-const makeMapStateToProps = () => {
-  const teamSelector = makeTeamSelector();
-  return (state, ownProps) => ({
-    team: teamSelector(state, ownProps)
-  });
-};
+const mapStateToProps = (state, props) => ({
+  team: teamSelector(state, props)
+});
 
-export default connect(makeMapStateToProps)(UsersByTeam);
+export default connect(mapStateToProps)(UsersByTeam);
