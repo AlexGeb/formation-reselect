@@ -1,8 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
 
 export const Users = ({ users }) => {
-  console.log('render Users');
+  console.log(
+    'render Users,',
+    'usersSelector number of recomputations : ',
+    usersSelector.recomputations()
+  );
   return (
     <ul>
       {users.map(user => (
@@ -12,6 +17,11 @@ export const Users = ({ users }) => {
   );
 };
 
-const mapStateToProps = state => ({ users: Object.values(state.users.byId) });
+const usersSelector = createSelector(
+  [state => state.users.byId],
+  usersById => Object.values(usersById)
+);
+
+const mapStateToProps = state => ({ users: usersSelector(state) });
 
 export default connect(mapStateToProps)(Users);
