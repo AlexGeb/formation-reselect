@@ -18,8 +18,8 @@ export const Users = ({ users }) => {
 };
 
 const usersSelector = createSelector(
-  [state => state.users.byId],
-  usersById => Object.values(usersById)
+  [state => state.users],
+  users => users.filter(user => user.teamId === 2)
 );
 
 const mapStateToProps = state => ({ users: usersSelector(state) });
