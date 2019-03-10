@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Counter from './Counter';
-import Users from './Users';
 import UsersByTeam from './UsersByTeam';
 import store from './store';
 
@@ -13,8 +12,6 @@ class App extends Component {
       <div>
         <h1>Reselect redux state</h1>
         <Counter />
-        <h3>Les participants : </h3>
-        <Users />
         <h3>Les équipes : </h3>
         <div style={{ marginLeft: 25 }}>
           <UsersByTeam teamId={1} />

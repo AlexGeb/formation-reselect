@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 const UsersByTeam = ({ team }) => {
-  console.log('render UsersByTeam');
+  console.log(
+    'render UsersByTeam, selector recomputations : ',
+    teamSelector.recomputations()
+  );
   return (
     <div>
       <h4 style={{ textDecoration: 'underline' }}>{team.name}</h4>
@@ -16,18 +19,17 @@ const UsersByTeam = ({ team }) => {
   );
 };
 
+const teamIdSelector = (_, props) => props.teamId;
+const teamsSelector = state => state.teams;
+const usersSelector = state => state.users;
+
 const teamSelector = createSelector(
-  [
-    (state, props) => props.teamId,
-    state => state.teams.byId,
-    state => state.users.byId
-  ],
-  (teamId, teamsById, usersById) => {
-    const team = teamsById[teamId];
-    const users = Object.values(usersById).filter(
-      user => user.teamId === teamId
-    );
-    return { ...team, users };
+  [teamIdSelector, teamsSelector, usersSelector],
+  (teamId, teams, users) => {
+    return {
+      ...teams.find(team => team.id === teamId),
+      users: users.filter(user => user.teamId === teamId)
+    };
   }
 );
 
