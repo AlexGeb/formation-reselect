@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+import { createSelectorCreator } from 'reselect';
+import memoize from 'lodash/memoize';
 
 const UsersByTeam = ({ team }) => {
   console.log(
@@ -23,7 +25,9 @@ const teamIdSelector = (_, props) => props.teamId;
 const teamsSelector = state => state.teams;
 const usersSelector = state => state.users;
 
-const teamSelector = createSelector(
+const unlimitedCacheSelectorCreator = createSelectorCreator(memoize);
+
+const teamSelector = unlimitedCacheSelectorCreator(
   [teamIdSelector, teamsSelector, usersSelector],
   (teamId, teams, users) => {
     return {
