@@ -12,6 +12,11 @@ export const Users = ({ users }) => {
   );
 };
 
-const mapStateToProps = state => ({ users: Object.values(state.users.byId) });
+const mapStateToProps = state => (
+  console.log('mapStateToProps called'),
+  {
+    users: state.users //.filter(user => user.teamId === 1)
+  }
+);
 
 export default connect(mapStateToProps)(Users);
