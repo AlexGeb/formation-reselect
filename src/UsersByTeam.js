@@ -20,18 +20,22 @@ const teamIdSelector = (_, props) => props.teamId;
 const teamsSelector = state => state.teams;
 const usersSelector = state => state.users;
 
-const teamSelector = createSelector(
-  [teamIdSelector, teamsSelector, usersSelector],
-  (teamId, teams, users) => {
-    return {
-      ...teams.find(team => team.id === teamId),
-      users: users.filter(user => user.teamId === teamId)
-    };
-  }
-);
+const makeTeamSelector = () =>
+  createSelector(
+    [teamIdSelector, teamsSelector, usersSelector],
+    (teamId, teams, users) => {
+      return {
+        ...teams.find(team => team.id === teamId),
+        users: users.filter(user => user.teamId === teamId)
+      };
+    }
+  );
 
-const mapStateToProps = (state, props) => ({
-  team: teamSelector(state, props)
-});
+const makeMapStateToProps = (initialState, initialProps) => {
+  const teamSelector = makeTeamSelector();
+  return (state, props) => ({
+    team: teamSelector(state, props)
+  });
+};
 
-export default connect(mapStateToProps)(UsersByTeam);
+export default connect(makeMapStateToProps)(UsersByTeam);
