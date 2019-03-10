@@ -20,7 +20,7 @@ const teamIdSelector = (_, props) => props.teamId;
 const teamsSelector = state => state.teams;
 const usersSelector = state => state.users;
 
-const makeTeamSelector = () =>
+export const makeTeamSelector = () =>
   createSelector(
     [teamIdSelector, teamsSelector, usersSelector],
     (teamId, teams, users) => {
