@@ -15,7 +15,6 @@ class App extends Component {
         <h3>Les équipes : </h3>
         <div style={{ marginLeft: 25 }}>
           <UsersByTeam teamId={1} />
-          <UsersByTeam teamId={2} />
         </div>
         <div>
           <h3>Initial state : </h3>
